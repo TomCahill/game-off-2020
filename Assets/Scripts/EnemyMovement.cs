@@ -36,7 +36,6 @@ public class EnemyMovement : MonoBehaviour
         else { 
             Death();
         }
-
         Movement();
     }
 
@@ -44,6 +43,13 @@ public class EnemyMovement : MonoBehaviour
     {
         transform.Rotate(new Vector3(0, 0, 220.0f * Time.deltaTime));
         //transform.localScale *= 0.8f;
+        float scaleSpeed = 2.5f * Time.deltaTime;
+        Vector2 currentScale = transform.localScale;
+        if (currentScale.x <= 0.05)
+            Destroy(this);
+        else
+            transform.localScale = (currentScale - new Vector2(scaleSpeed, scaleSpeed));
+        
     }
 
     void Movement()
@@ -67,9 +73,10 @@ public class EnemyMovement : MonoBehaviour
         else
             movement += new Vector3(0, bobSpeed, 0);
 
-        
+        transform.position += movement;
+
         if (!dead)
-            transform.position += movement;
+        {
             //state transitions
             if (stateTime >= 2.0f)
             {
@@ -84,13 +91,15 @@ public class EnemyMovement : MonoBehaviour
                 stateTime = 0.0f;
             }
 
-            if (bobTime >= 0.3f) {
+            if (bobTime >= 0.3f)
+            {
                 bobUp = !bobUp;
                 bobTime = 0.0f;
             }
 
             stateTime += Time.deltaTime;
             bobTime += Time.deltaTime;
+        }
     }
 
     
